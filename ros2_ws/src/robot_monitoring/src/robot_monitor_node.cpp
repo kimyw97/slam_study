@@ -84,6 +84,7 @@ private:
 int main(int argc, char **argv) {
   rclcpp::init(argc, argv);
   rclcpp::spin(std::make_shared<RobotMonitorNode>());
+  RCLCPP_INFO (this->get_logger(), "node finished")
   rclcpp::shutdown();
   return 0;
 }
