@@ -1,15 +1,20 @@
 from launch import LaunchDescription
-from launch_ros.actions import Node
 from launch.actions import DeclareLaunchArgument
 from launch.substitutions import LaunchConfiguration, Command
-from launch_ros.substitutions import FindPackageShare
-import os
+from launch_ros.actions import Node
 
 def generate_launch_description():
-    urdf_path = '/home/kimyw/vscode/CHORES/cow_HW/cow.urdf.xacro'
+    urdf_path_arg = DeclareLaunchArgument(
+        name='urdf_path',
+        description='Absolute path to URDF/XACRO file'
+    )
+
+    urdf_path = LaunchConfiguration('urdf_path')
 
     return LaunchDescription([
-        # Joint State Publisher (no GUI)
+        urdf_path_arg,
+
+        # Joint State Publisher
         Node(
             package='joint_state_publisher',
             executable='joint_state_publisher',
