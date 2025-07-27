@@ -32,13 +32,12 @@ private:
       if (ch == '\n') {
         RCLCPP_INFO(this->get_logger(), "Raw line: '%s'", buffer_.c_str());
 
-        std::regex regex(
-            "SPEED:L(-?\\d+),R(-?\\d+);"
-            "TRASH:(\\d);"
-            "EMERGENCY:(\\d);"
-            "ENCODER:L(-?\\d+),R(-?\\d+);"
-            "ACC:(-?\\d+),(-?\\d+),(-?\\d+),"
-            "GYRO:(-?\\d+),(-?\\d+),(-?\\d+)");
+        std::regex regex("SPEED:L(-?\\d+),R(-?\\d+);"
+                         "TRASH:(\\d);"
+                         "EMERGENCY:(\\d);"
+                         "ENCODER:L(-?\\d+),R(-?\\d+);"
+                         "ACC:(-?\\d+),(-?\\d+),(-?\\d+),"
+                         "GYRO:(-?\\d+),(-?\\d+),(-?\\d+)");
 
         std::smatch match;
 
@@ -83,8 +82,9 @@ private:
 
 int main(int argc, char **argv) {
   rclcpp::init(argc, argv);
-  rclcpp::spin(std::make_shared<RobotMonitorNode>());
-  RCLCPP_INFO (this->get_logger(), "node finished")
+  auto node = std::make_shared<RobotMonitorNode>();
+  rclcpp::spin(node);
+  RCLCPP_INFO(node->get_logger(), "node finished");
   rclcpp::shutdown();
   return 0;
 }
