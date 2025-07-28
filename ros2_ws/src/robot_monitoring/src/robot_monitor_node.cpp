@@ -28,59 +28,84 @@ public:
 private:
   void readSerial() {
     char ch;
-    while (serial_.get(ch)) {
-      RCLCPP_INFO(this->get_logger(), "while start");
-      if (ch == '\n') {
-        RCLCPP_INFO(this->get_logger(), "Raw line: '%s'", buffer_.c_str());
-
-        std::regex regex("SPEED:L(-?\\d+),R(-?\\d+);"
-                         "TRASH:(\\d);"
-                         "EMERGENCY:(\\d);"
-                         "ENCODER:L(-?\\d+),R(-?\\d+);"
-                         "ACC:(-?\\d+),(-?\\d+),(-?\\d+),"
-                         "GYRO:(-?\\d+),(-?\\d+),(-?\\d+)");
-
-        std::smatch match;
-
-        if (std::regex_search(buffer_, match, regex)) {
-          auto msg = robot_monitoring::msg::RobotStatus();
-
-          msg.left_speed = std::stoi(match[1]);
-          msg.right_speed = std::stoi(match[2]);
-          msg.trash_full = std::stoi(match[3]) == 1;
-          msg.emergency = std::stoi(match[4]) == 1;
-          msg.left_encoder = std::stoi(match[5]);
-          msg.right_encoder = std::stoi(match[6]);
-
-          msg.acc_x = std::stoi(match[7]);
-          msg.acc_y = std::stoi(match[8]);
-          msg.acc_z = std::stoi(match[9]);
-
-          msg.gyro_x = std::stoi(match[10]);
-          msg.gyro_y = std::stoi(match[11]);
-          msg.gyro_z = std::stoi(match[12]);
-
-          status_pub_->publish(msg);
-          RCLCPP_INFO(this->get_logger(), "Published robot status with IMU, "
-                                          "magnetometer, and orientation.");
-        } else {
-          RCLCPP_WARN(this->get_logger(), "Regex match failed for line: '%s'",
-                      buffer_.c_str());
-        }
-
-        buffer_.clear();
+    if (serial_.eof()) {
+      RCLCPP_WARN(this->get_logger(), "Serial stream EOF reached");
+      serial_.clear(); // 스트림 상태 복구
+      return;
+    }
+    if (serial_.fail()) {
+      RCLCPP_ERROR(this->get_logger(), "Serial stream failed");
+      serial_.close();
+      serial_.clear();
+      serial_.open("/dev/ttyAMA0", std::ios::in);
+      if (!serial_.is_open()) {
+        RCLCPP_FATAL(this->get_logger(),
+                     "Failed to reopen /dev/ttyAMA0 after fail.");
       } else {
-        buffer_ += ch;
+        RCLCPP_INFO(this->get_logger(),
+                    "Successfully reopened /dev/ttyAMA0 after fail.");
       }
-      RCLCPP_INFO(this->get_logger(), "while end");
+      return;
     }
   }
+  if (serial_.bad()) {
+    RCLCPP_FATAL(this->get_logger(),
+                 "Serial stream is corrupted (badbit set) - cannot continue.");
+    rclcpp::shutdown(); // 심각한 오류이므로 노드 종료
+    return;
+  }
+  while (serial_.get(ch)) {
+    if (ch == '\n') {
+      RCLCPP_INFO(this->get_logger(), "Raw line: '%s'", buffer_.c_str());
 
-  std::ifstream serial_;
-  std::string buffer_;
-  rclcpp::Publisher<robot_monitoring::msg::RobotStatus>::SharedPtr status_pub_;
-  rclcpp::TimerBase::SharedPtr timer_;
-};
+      std::regex regex("SPEED:L(-?\\d+),R(-?\\d+);"
+                       "TRASH:(\\d);"
+                       "EMERGENCY:(\\d);"
+                       "ENCODER:L(-?\\d+),R(-?\\d+);"
+                       "ACC:(-?\\d+),(-?\\d+),(-?\\d+),"
+                       "GYRO:(-?\\d+),(-?\\d+),(-?\\d+)");
+
+      std::smatch match;
+
+      if (std::regex_search(buffer_, match, regex)) {
+        auto msg = robot_monitoring::msg::RobotStatus();
+
+        msg.left_speed = std::stoi(match[1]);
+        msg.right_speed = std::stoi(match[2]);
+        msg.trash_full = std::stoi(match[3]) == 1;
+        msg.emergency = std::stoi(match[4]) == 1;
+        msg.left_encoder = std::stoi(match[5]);
+        msg.right_encoder = std::stoi(match[6]);
+
+        msg.acc_x = std::stoi(match[7]);
+        msg.acc_y = std::stoi(match[8]);
+        msg.acc_z = std::stoi(match[9]);
+
+        msg.gyro_x = std::stoi(match[10]);
+        msg.gyro_y = std::stoi(match[11]);
+        msg.gyro_z = std::stoi(match[12]);
+
+        status_pub_->publish(msg);
+        RCLCPP_INFO(this->get_logger(), "Published robot status with IMU, "
+                                        "magnetometer, and orientation.");
+      } else {
+        RCLCPP_WARN(this->get_logger(), "Regex match failed for line: '%s'",
+                    buffer_.c_str());
+      }
+
+      buffer_.clear();
+    } else {
+      buffer_ += ch;
+    }
+  }
+}
+
+std::ifstream serial_;
+std::string buffer_;
+rclcpp::Publisher<robot_monitoring::msg::RobotStatus>::SharedPtr status_pub_;
+rclcpp::TimerBase::SharedPtr timer_;
+}
+;
 
 int main(int argc, char **argv) {
   rclcpp::init(argc, argv);
