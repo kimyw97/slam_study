@@ -1,0 +1,33 @@
+# colcon build outputs
+build/
+install/
+log/
+
+# colcon metadata
+.colcon/
+
+# ROS 2 launch parameter/log files (optional)
+*.yaml
+*.log
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Editor settings
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# ROS 2 local config (optional, e.g., rqt config)
+*.ini
+*.db
+
+# 환경변수/개인 설정 파일
+.env
+*.local.yaml
