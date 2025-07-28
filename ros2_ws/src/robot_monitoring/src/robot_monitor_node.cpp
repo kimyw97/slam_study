@@ -29,7 +29,7 @@ private:
   void readSerial() {
     char ch;
     while (serial_.get(ch)) {
-      RCLCPP_INFO(this->get_logger(), "while start")
+      RCLCPP_INFO(this->get_logger(), "while start");
       if (ch == '\n') {
         RCLCPP_INFO(this->get_logger(), "Raw line: '%s'", buffer_.c_str());
 
@@ -72,7 +72,7 @@ private:
       } else {
         buffer_ += ch;
       }
-      RCLCPP_INFO(this->get_logger(), "while end")
+      RCLCPP_INFO(this->get_logger(), "while end");
     }
   }
 
