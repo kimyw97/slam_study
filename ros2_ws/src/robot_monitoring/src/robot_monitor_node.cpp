@@ -4,6 +4,7 @@
 #include <fstream>
 #include <regex>
 #include <string>
+#include <fcntl.h>
 
 class RobotMonitorNode : public rclcpp::Node {
 public:

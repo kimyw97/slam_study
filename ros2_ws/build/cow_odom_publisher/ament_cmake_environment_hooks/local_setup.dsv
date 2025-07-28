@@ -1,0 +1,2 @@
+source;share/cow_odom_publisher/environment/ament_prefix_path.sh
+source;share/cow_odom_publisher/environment/path.sh

@@ -1,0 +1,14 @@
+[01m[K/home/kyw/vscode/slam_study/ros2_ws/src/robot_monitoring/src/robot_monitor_node.cpp:[m[K In constructor ‘[01m[KRobotMonitorNode::[01;32m[KRobotMonitorNode[m[K()[m[K’:
+[01m[K/home/kyw/vscode/slam_study/ros2_ws/src/robot_monitoring/src/robot_monitor_node.cpp:13:34:[m[K [01;31m[Kerror: [m[K‘[01m[KO_RDONLY[m[K’ was not declared in this scope
+   13 |     serial_.open("/dev/ttyAMA0", [01;31m[KO_RDONLY[m[K | O_NOCTTY | O_NONBLOCK);
+      |                                  [01;31m[K^~~~~~~~[m[K
+[01m[K/home/kyw/vscode/slam_study/ros2_ws/src/robot_monitoring/src/robot_monitor_node.cpp:13:45:[m[K [01;31m[Kerror: [m[K‘[01m[KO_NOCTTY[m[K’ was not declared in this scope; did you mean ‘[01m[KENOTTY[m[K’?
+   13 |     serial_.open("/dev/ttyAMA0", O_RDONLY | [01;31m[KO_NOCTTY[m[K | O_NONBLOCK);
+      |                                             [01;31m[K^~~~~~~~[m[K
+      |                                             [32m[KENOTTY[m[K
+[01m[K/home/kyw/vscode/slam_study/ros2_ws/src/robot_monitoring/src/robot_monitor_node.cpp:13:56:[m[K [01;31m[Kerror: [m[K‘[01m[KO_NONBLOCK[m[K’ was not declared in this scope
+   13 |     serial_.open("/dev/ttyAMA0", O_RDONLY | O_NOCTTY | [01;31m[KO_NONBLOCK[m[K);
+      |                                                        [01;31m[K^~~~~~~~~~[m[K
+gmake[2]: *** [CMakeFiles/robot_monitor_node.dir/build.make:76: CMakeFiles/robot_monitor_node.dir/src/robot_monitor_node.cpp.o] Error 1
+gmake[1]: *** [CMakeFiles/Makefile2:626: CMakeFiles/robot_monitor_node.dir/all] Error 2
+gmake: *** [Makefile:146: all] Error 2

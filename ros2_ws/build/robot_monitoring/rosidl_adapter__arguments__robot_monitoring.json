@@ -1,0 +1,6 @@
+{
+  "package_name": "robot_monitoring",
+  "non_idl_tuples": [
+    "/home/kyw/vscode/slam_study/ros2_ws/src/robot_monitoring:msg/RobotStatus.msg"
+  ]
+}

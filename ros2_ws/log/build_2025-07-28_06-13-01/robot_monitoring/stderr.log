@@ -1,0 +1,33 @@
+[01m[K/home/kyw/vscode/slam_study/ros2_ws/src/robot_monitoring/src/robot_monitor_node.cpp:[m[K In constructor ‘[01m[KRobotMonitorNode::[01;32m[KRobotMonitorNode[m[K()[m[K’:
+[01m[K/home/kyw/vscode/slam_study/ros2_ws/src/robot_monitoring/src/robot_monitor_node.cpp:14:17:[m[K [01;31m[Kerror: [m[Kno matching function for call to ‘[01m[Kstd::basic_ifstream<char>::open(const char [13], int)[m[K’
+   14 |     [01;31m[Kserial_.open("/dev/ttyAMA0", O_RDONLY | O_NOCTTY | O_NONBLOCK)[m[K;
+      |     [01;31m[K~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[m[K
+In file included from [01m[K/home/kyw/vscode/slam_study/ros2_ws/src/robot_monitoring/src/robot_monitor_node.cpp:4[m[K:
+[01m[K/usr/include/c++/13/fstream:725:9:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Ktemplate<class _Path> std::_If_fs_path<_Path, void> std::basic_ifstream<_CharT, _Traits>::[01;32m[Kopen[m[K(const _Path&, std::ios_base::openmode) [35m[K[with _CharT = char; _Traits = std::char_traits<char>][m[K[m[K’
+  725 |         [01;36m[Kopen[m[K(const _Path& __s, ios_base::openmode __mode = ios_base::in)
+      |         [01;36m[K^~~~[m[K
+[01m[K/usr/include/c++/13/fstream:725:9:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
+[01m[K/home/kyw/vscode/slam_study/ros2_ws/src/robot_monitoring/src/robot_monitor_node.cpp:14:54:[m[K [01;36m[Knote: [m[K  cannot convert ‘[01m[K((0 | 256) | 2048)[m[K’ (type ‘[01m[Kint[m[K’) to type ‘[01m[Kstd::ios_base::openmode[m[K’
+   14 |     serial_.open("/dev/ttyAMA0", O_RDONLY | O_NOCTTY [01;36m[K|[m[K O_NONBLOCK);
+      |                                                      [01;36m[K^[m[K
+[01m[K/usr/include/c++/13/fstream:665:7:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Kvoid std::basic_ifstream<_CharT, _Traits>::[01;32m[Kopen[m[K(const char*, std::ios_base::openmode) [35m[K[with _CharT = char; _Traits = std::char_traits<char>; std::ios_base::openmode = std::ios_base::openmode][m[K[m[K’ (near match)
+  665 |       [01;36m[Kopen[m[K(const char* __s, ios_base::openmode __mode = ios_base::in)
+      |       [01;36m[K^~~~[m[K
+[01m[K/usr/include/c++/13/fstream:665:7:[m[K [01;36m[Knote: [m[K  conversion of argument 2 would be ill-formed:
+[01m[K/home/kyw/vscode/slam_study/ros2_ws/src/robot_monitoring/src/robot_monitor_node.cpp:14:54:[m[K [01;31m[Kerror: [m[Kinvalid conversion from ‘[01m[Kint[m[K’ to ‘[01m[Kstd::ios_base::openmode[m[K’ [[01;31m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-fpermissive-fpermissive]8;;[m[K]
+   14 |     serial_.open("/dev/ttyAMA0", O_RDONLY | O_NOCTTY [01;31m[K|[m[K O_NONBLOCK);
+      |                                                      [01;31m[K^[m[K
+      |                                                      [01;31m[K|[m[K
+      |                                                      [01;31m[Kint[m[K
+[01m[K/usr/include/c++/13/fstream:704:7:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Kvoid std::basic_ifstream<_CharT, _Traits>::[01;32m[Kopen[m[K(const std::string&, std::ios_base::openmode) [35m[K[with _CharT = char; _Traits = std::char_traits<char>; std::string = std::__cxx11::basic_string<char>; std::ios_base::openmode = std::ios_base::openmode][m[K[m[K’ (near match)
+  704 |       [01;36m[Kopen[m[K(const std::string& __s, ios_base::openmode __mode = ios_base::in)
+      |       [01;36m[K^~~~[m[K
+[01m[K/usr/include/c++/13/fstream:704:7:[m[K [01;36m[Knote: [m[K  conversion of argument 2 would be ill-formed:
+[01m[K/home/kyw/vscode/slam_study/ros2_ws/src/robot_monitoring/src/robot_monitor_node.cpp:14:54:[m[K [01;31m[Kerror: [m[Kinvalid conversion from ‘[01m[Kint[m[K’ to ‘[01m[Kstd::ios_base::openmode[m[K’ [[01;31m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-fpermissive-fpermissive]8;;[m[K]
+   14 |     serial_.open("/dev/ttyAMA0", O_RDONLY | O_NOCTTY [01;31m[K|[m[K O_NONBLOCK);
+      |                                                      [01;31m[K^[m[K
+      |                                                      [01;31m[K|[m[K
+      |                                                      [01;31m[Kint[m[K
+gmake[2]: *** [CMakeFiles/robot_monitor_node.dir/build.make:76: CMakeFiles/robot_monitor_node.dir/src/robot_monitor_node.cpp.o] Error 1
+gmake[1]: *** [CMakeFiles/Makefile2:626: CMakeFiles/robot_monitor_node.dir/all] Error 2
+gmake: *** [Makefile:146: all] Error 2

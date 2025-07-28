@@ -1,0 +1,4 @@
+source;share/cmdvel_to_serial_cpp/local_setup.bash
+source;share/cmdvel_to_serial_cpp/local_setup.dsv
+source;share/cmdvel_to_serial_cpp/local_setup.sh
+source;share/cmdvel_to_serial_cpp/local_setup.zsh

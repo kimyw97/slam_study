@@ -1,0 +1,34 @@
+// generated from rosidl_adapter/resource/msg.idl.em
+// with input from robot_monitoring/msg/RobotStatus.msg
+// generated code does not contain a copyright notice
+
+
+module robot_monitoring {
+  module msg {
+    struct RobotStatus {
+      int32 left_speed;
+
+      int32 right_speed;
+
+      boolean trash_full;
+
+      boolean emergency;
+
+      int32 left_encoder;
+
+      int32 right_encoder;
+
+      int32 acc_x;
+
+      int32 acc_y;
+
+      int32 acc_z;
+
+      int32 gyro_x;
+
+      int32 gyro_y;
+
+      int32 gyro_z;
+    };
+  };
+};

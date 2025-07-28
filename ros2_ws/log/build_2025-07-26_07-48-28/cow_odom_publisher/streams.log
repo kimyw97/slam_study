@@ -1,0 +1,46 @@
+[0.008s] Invoking command in '/home/kyw/vscode/slam_study/ros2_ws/build/cow_odom_publisher': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake /home/kyw/vscode/slam_study/ros2_ws/src/cow_odom_publisher -DCMAKE_INSTALL_PREFIX=/home/kyw/vscode/slam_study/ros2_ws/install/cow_odom_publisher
+[0.159s] -- The C compiler identification is GNU 13.3.0
+[0.270s] -- The CXX compiler identification is GNU 13.3.0
+[0.288s] -- Detecting C compiler ABI info
+[0.364s] -- Detecting C compiler ABI info - done
+[0.371s] -- Check for working C compiler: /usr/bin/cc - skipped
+[0.372s] -- Detecting C compile features
+[0.372s] -- Detecting C compile features - done
+[0.380s] -- Detecting CXX compiler ABI info
+[0.449s] -- Detecting CXX compiler ABI info - done
+[0.457s] -- Check for working CXX compiler: /usr/bin/c++ - skipped
+[0.458s] -- Detecting CXX compile features
+[0.458s] -- Detecting CXX compile features - done
+[0.472s] -- Found ament_cmake: 2.5.4 (/opt/ros/jazzy/share/ament_cmake/cmake)
+[0.580s] -- Found Python3: /usr/bin/python3 (found version "3.12.3") found components: Interpreter 
+[0.697s] -- Found rclcpp: 28.1.9 (/opt/ros/jazzy/share/rclcpp/cmake)
+[0.760s] -- Found rosidl_generator_c: 4.6.5 (/opt/ros/jazzy/share/rosidl_generator_c/cmake)
+[0.778s] -- Found rosidl_generator_cpp: 4.6.5 (/opt/ros/jazzy/share/rosidl_generator_cpp/cmake)
+[0.807s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[0.831s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[0.926s] -- Found rmw_implementation_cmake: 7.3.2 (/opt/ros/jazzy/share/rmw_implementation_cmake/cmake)
+[0.932s] -- Found rmw_fastrtps_cpp: 8.4.2 (/opt/ros/jazzy/share/rmw_fastrtps_cpp/cmake)
+[1.024s] -- Found OpenSSL: /usr/lib/aarch64-linux-gnu/libcrypto.so (found version "3.0.13")  
+[1.042s] -- Found FastRTPS: /opt/ros/jazzy/include (Required is at least version "2.13") 
+[1.059s] -- Using RMW implementation 'rmw_fastrtps_cpp' as default
+[1.148s] -- Found nav_msgs: 5.3.6 (/opt/ros/jazzy/share/nav_msgs/cmake)
+[1.205s] -- Found tf2_ros: 0.36.11 (/opt/ros/jazzy/share/tf2_ros/cmake)
+[1.369s] [31mCMake Error at CMakeLists.txt:14 (find_package):
+[1.369s]   By not providing "Findrobot_monitoring.cmake" in CMAKE_MODULE_PATH this
+[1.369s]   project has asked CMake to find a package configuration file provided by
+[1.369s]   "robot_monitoring", but CMake did not find one.
+[1.369s] 
+[1.369s]   Could not find a package configuration file provided by "robot_monitoring"
+[1.369s]   with any of the following names:
+[1.369s] 
+[1.369s]     robot_monitoringConfig.cmake
+[1.369s]     robot_monitoring-config.cmake
+[1.369s] 
+[1.369s]   Add the installation prefix of "robot_monitoring" to CMAKE_PREFIX_PATH or
+[1.369s]   set "robot_monitoring_DIR" to a directory containing one of the above
+[1.369s]   files.  If "robot_monitoring" provides a separate development package or
+[1.369s]   SDK, be sure it has been installed.
+[1.369s] 
+[1.369s] [0m
+[1.369s] -- Configuring incomplete, errors occurred!
+[1.375s] Invoked command in '/home/kyw/vscode/slam_study/ros2_ws/build/cow_odom_publisher' returned '1': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake /home/kyw/vscode/slam_study/ros2_ws/src/cow_odom_publisher -DCMAKE_INSTALL_PREFIX=/home/kyw/vscode/slam_study/ros2_ws/install/cow_odom_publisher
