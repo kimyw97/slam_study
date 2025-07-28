@@ -11,7 +11,7 @@ public:
   RobotMonitorNode() : Node("robot_monitor_node") {
     status_pub_ = this->create_publisher<robot_monitoring::msg::RobotStatus>(
         "robot_status", 10);
-    serial_.open("/dev/ttyAMA0", O_RDONLY | O_NOCTTY | O_NONBLOCK);
+    serial_.open("/dev/ttyAMA0", std::ios::in);
     serial_.setf(std::ios::skipws);
     if (!serial_.is_open()) {
       RCLCPP_FATAL(this->get_logger(), "Failed to open /dev/ttyAMA0");
@@ -29,6 +29,32 @@ public:
 private:
   void readSerial() {
     char ch;
+    if (serial_.eof()) {
+      RCLCPP_WARN(this->get_logger(), "Serial stream EOF reached");
+      serial_.clear(); // 스트림 상태 복구
+      return;
+    }
+    if (serial_.fail()) {
+      RCLCPP_ERROR(this->get_logger(), "Serial stream failed");
+      serial_.close();
+      serial_.clear();
+      serial_.open("/dev/ttyAMA0", std::ios::in);
+      if (!serial_.is_open()) {
+        RCLCPP_FATAL(this->get_logger(),
+                     "Failed to reopen /dev/ttyAMA0 after fail.");
+      } else {
+        RCLCPP_INFO(this->get_logger(),
+                    "Successfully reopened /dev/ttyAMA0 after fail.");
+      }
+      return;
+    }
+    if (serial_.bad()) {
+      RCLCPP_FATAL(
+          this->get_logger(),
+          "Serial stream is corrupted (badbit set) - cannot continue.");
+      rclcpp::shutdown(); // 심각한 오류이므로 노드 종료
+      return;
+    }
     while (serial_.get(ch)) {
       if (ch == '\n') {
         RCLCPP_INFO(this->get_logger(), "Raw line: '%s'", buffer_.c_str());
