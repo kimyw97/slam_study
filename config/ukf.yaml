@@ -56,9 +56,9 @@ ukf_filter_node:
         false,
         false,
         false, # roll, pitch, yaw (방향 사용)
-        false,
-        false,
-        false, # 선속도 무시
+        true,
+        true,
+        true, # 선속도 무시
         true,
         true,
         true, # 각속도 사용
