@@ -1,7 +1,0 @@
-{
-  "package_name": "robot_monitoring",
-  "output_dir": "/home/kyw/vscode/slam_study/ros2_ws/build/robot_monitoring/rosidl_generator_type_description/robot_monitoring",
-  "idl_tuples": [
-    "/home/kyw/vscode/slam_study/ros2_ws/build/robot_monitoring/rosidl_adapter/robot_monitoring:msg/RobotStatus.idl"
-  ]
-}

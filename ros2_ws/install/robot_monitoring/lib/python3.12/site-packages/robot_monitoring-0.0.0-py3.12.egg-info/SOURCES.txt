@@ -1,8 +1,0 @@
-setup.py
-robot_monitoring/__init__.py
-robot_monitoring.egg-info/PKG-INFO
-robot_monitoring.egg-info/SOURCES.txt
-robot_monitoring.egg-info/dependency_links.txt
-robot_monitoring.egg-info/top_level.txt
-robot_monitoring/msg/__init__.py
-robot_monitoring/msg/_robot_status.py

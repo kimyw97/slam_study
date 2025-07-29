@@ -1,4 +1,0 @@
-source;share/cow_odom_publisher/local_setup.bash
-source;share/cow_odom_publisher/local_setup.dsv
-source;share/cow_odom_publisher/local_setup.sh
-source;share/cow_odom_publisher/local_setup.zsh
