@@ -1,6 +1,7 @@
 /home/kyw/vscode/slam_study/ros2_ws/install/cow_odom_publisher/lib/cow_odom_publisher/cow_odom_publisher
 /home/kyw/vscode/slam_study/ros2_ws/install/cow_odom_publisher/share/cow_odom_publisher/launch/ekf_localization.launch.py
 /home/kyw/vscode/slam_study/ros2_ws/install/cow_odom_publisher/share/cow_odom_publisher/launch/cow.launch.py
+/home/kyw/vscode/slam_study/ros2_ws/install/cow_odom_publisher/share/cow_odom_publisher/launch/ukf_localization.launch.py
 /home/kyw/vscode/slam_study/ros2_ws/install/cow_odom_publisher/share/ament_index/resource_index/package_run_dependencies/cow_odom_publisher
 /home/kyw/vscode/slam_study/ros2_ws/install/cow_odom_publisher/share/ament_index/resource_index/parent_prefix_path/cow_odom_publisher
 /home/kyw/vscode/slam_study/ros2_ws/install/cow_odom_publisher/share/cow_odom_publisher/environment/ament_prefix_path.sh

@@ -16,9 +16,9 @@ ekf_filter_node:
     transform_time_offset: 0.0
     print_diagnostics: true
     use_control: true
-    acceleration_limits: [0.45, 0.0, 0.0, 0.0, 0.0, 0.20]
+    acceleration_limits: [0.40, 0.0, 0.0, 0.0, 0.0, 5.3]
 
-    acceleration_gains: [0.6, 0.0, 0.0, 0.0, 0.0, 0.6]
+    acceleration_gains: [0.4, 0.0, 0.0, 0.0, 0.0, 0.4]
 
     control_timeout: 2.0
 

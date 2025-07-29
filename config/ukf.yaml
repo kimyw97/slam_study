@@ -2,73 +2,76 @@
 
 ukf_filter_node:
   ros__parameters:
-    frequency: 60.0
-    sensor_timeout: 0.1
+    ### 기본 설정 ###
+    frequency: 30.0 # 필터 주기 (Hz) — 센서가 없어도 주기적으로 상태 예측
+    sensor_timeout: 0.1 # 센서 데이터가 없을 경우 타임아웃 시간 (초)
 
-    # 프레임 설정
-    base_link_frame: base_footprint
-    odom_frame: odom
-    world_frame: odom # odom 또는 map 중 TF 트리 기준 선택
-    publish_tf: true
-    map_frame: map # 필수 파라미터
+    # 좌표계 프레임 설정
+    base_link_frame: base_footprint # 로봇의 기준 프레임
+    odom_frame: odom # 오도메트리 프레임 (local reference)
+    world_frame: odom # 전역 좌표 프레임 (GPS 없으면 odom 사용)
+    map_frame: map # map -> odom 변환을 발행할 경우 필요
+    publish_tf: true # 필터가 TF를 publish할지 여부
 
-    two_d_mode: true # 2d,로봇이 평면 환경에서 작동하는지
+    # 로봇이 평면 환경(2D)에서만 움직일 경우 true
+    two_d_mode: true
+
+    # 시각 동기화를 위한 옵셋
     transform_time_offset: 0.0
-    print_diagnostics: true
+    print_diagnostics: true # 진단 정보 출력
+
+    ### 제어 입력 관련 ###
     use_control: true
-    acceleration_limits: [0.45, 0.0, 0.0, 0.0, 0.0, 0.20]
-
-    acceleration_gains: [0.6, 0.0, 0.0, 0.0, 0.0, 0.6]
-
-    control_timeout: 2.0
-
+    acceleration_limits: [0.45, 0.0, 0.0, 0.0, 0.0, 0.20] # [x, y, z, roll, pitch, yaw] m/s^2
+    acceleration_gains: [0.6, 0.0, 0.0, 0.0, 0.0, 0.6] # PID 제어에서 가중치
     control_config: [true, false, false, false, false, true]
 
-    # ---------------------------------------
-    # 오도메트리 센서 설정 (wheel encoder 기반)
-    # X,Y,Z,roll,pitch,yaw,X˙,Y˙,Z˙,roll˙,pitch˙,yaw˙,X¨,Y¨,Z¨
-
-    odom0: odom
+    ### 센서 설정 예시 ###
+    odom0: odom # 휠 오도메트리
     odom0_config: [
-        false,
-        false,
-        false, # X, Y, Z (position)
-        false,
-        false,
-        false, # roll, pitch, yaw (orientation)
         true,
         true,
-        false, # X˙, Y˙, Z˙ (velocity)
+        false, # x, y, z
         false,
         false,
-        true, # roll˙, pitch˙, yaw˙ (angular velocity)
+        false, # roll, pitch, yaw
+        true,
+        true,
+        false, # vx, vy, vz
+        false,
+        false,
+        false, # wx, wy, wz
         false,
         false,
         false,
-      ]
-    odom0_differential: false
-    odom0_relative: false
+      ] # 가속도 무시
+    odom0_differential: false # 위치 기반 입력
+    odom0_relative: true # 상대 위치로 간주
 
-    # ---------------------------------------
-    # # IMU 센서 설정 (가속도계 + 자이로 + 방향)
     imu0: imu/data
     imu0_config: [
         false,
         false,
-        false, # X, Y, Z (position) -> IMU는 위치 정보 없음
+        false, # x, y, z (위치 무시)
         false,
         false,
-        true, # roll, pitch, yaw -> Yaw만 사용
+        false, # roll, pitch, yaw (방향 사용)
         false,
         false,
-        false, # X˙, Y˙, Z˙ (velocity)
-        false,
-        false,
-        true, # roll˙, pitch˙, yaw˙ -> Yaw angular velocity
+        false, # 선속도 무시
+        true,
+        true,
+        true, # 각속도 사용
         true,
         false,
         false,
-      ]
-
+      ] # 가속도 무시
     imu0_differential: false
     imu0_relative: false
+    imu0_remove_gravitational_acceleration: true
+  
+    ### UKF-specific parameters ###
+    alpha: 0.001 # 시그마 포인트 분산 폭
+    beta: 2.0 # 정규성 prior (Gaussian = 2)
+    kappa: 0.0 # 시그마 포인트 중심성
+
