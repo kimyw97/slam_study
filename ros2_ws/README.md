@@ -7,7 +7,7 @@
 3. ekf 돌리기
    1. ros2 launch cow_odom_publisher ekf_localization.launch.py ekf_param_path:=/home/kyw/vscode/slam_study/config/ekf.yaml
 4. slam돌리기
-   1. ros2 launch nav2_bringup slam_launch.py slam_params_file:=/home/kyw/vscode/slam_study/config/slam_config.yaml
+   1. ros2 launch nav2_bringup slam_launch.py slam_params_file:=/home/kyw/vscode/slam_study/config/slam_config.yaml use_sim_time:=false
 
 #머신 상태
 macos(UTM:VM, ubuntu 24.04) <-> raspberrypi5(ubuntu 24.04)

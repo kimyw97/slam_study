@@ -1,0 +1,74 @@
+# @format
+
+ukf_filter_node:
+  ros__parameters:
+    frequency: 60.0
+    sensor_timeout: 0.1
+
+    # 프레임 설정
+    base_link_frame: base_footprint
+    odom_frame: odom
+    world_frame: odom # odom 또는 map 중 TF 트리 기준 선택
+    publish_tf: true
+    map_frame: map # 필수 파라미터
+
+    two_d_mode: true # 2d,로봇이 평면 환경에서 작동하는지
+    transform_time_offset: 0.0
+    print_diagnostics: true
+    use_control: true
+    acceleration_limits: [0.45, 0.0, 0.0, 0.0, 0.0, 0.20]
+
+    acceleration_gains: [0.6, 0.0, 0.0, 0.0, 0.0, 0.6]
+
+    control_timeout: 2.0
+
+    control_config: [true, false, false, false, false, true]
+
+    # ---------------------------------------
+    # 오도메트리 센서 설정 (wheel encoder 기반)
+    # X,Y,Z,roll,pitch,yaw,X˙,Y˙,Z˙,roll˙,pitch˙,yaw˙,X¨,Y¨,Z¨
+
+    odom0: odom
+    odom0_config: [
+        false,
+        false,
+        false, # X, Y, Z (position)
+        false,
+        false,
+        false, # roll, pitch, yaw (orientation)
+        true,
+        true,
+        false, # X˙, Y˙, Z˙ (velocity)
+        false,
+        false,
+        true, # roll˙, pitch˙, yaw˙ (angular velocity)
+        false,
+        false,
+        false,
+      ]
+    odom0_differential: false
+    odom0_relative: false
+
+    # ---------------------------------------
+    # # IMU 센서 설정 (가속도계 + 자이로 + 방향)
+    imu0: imu/data
+    imu0_config: [
+        false,
+        false,
+        false, # X, Y, Z (position) -> IMU는 위치 정보 없음
+        false,
+        false,
+        true, # roll, pitch, yaw -> Yaw만 사용
+        false,
+        false,
+        false, # X˙, Y˙, Z˙ (velocity)
+        false,
+        false,
+        true, # roll˙, pitch˙, yaw˙ -> Yaw angular velocity
+        true,
+        false,
+        false,
+      ]
+
+    imu0_differential: false
+    imu0_relative: false

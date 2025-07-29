@@ -56,6 +56,7 @@ private:
       return;
     }
     while (serial_.get(ch)) {
+      RCLCPP_INFO(this->get_logger(), "while start");
       if (ch == '\n') {
         RCLCPP_INFO(this->get_logger(), "Raw line: '%s'", buffer_.c_str());
 
@@ -99,6 +100,7 @@ private:
         buffer_ += ch;
       }
     }
+    RCLCPP_INFO(this->get_logger(), "while end");
   }
 
   std::ifstream serial_;
