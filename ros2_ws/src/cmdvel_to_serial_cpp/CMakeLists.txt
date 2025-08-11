@@ -9,9 +9,10 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(geometry_msgs REQUIRED)
+find_package(robot_monitoring REQUIRED)
 
 add_executable(cmdvel_to_serial src/cmdvel_to_serial.cpp)
-ament_target_dependencies(cmdvel_to_serial rclcpp geometry_msgs)
+ament_target_dependencies(cmdvel_to_serial robot_monitoring rclcpp geometry_msgs)
 
 install(TARGETS
   cmdvel_to_serial
