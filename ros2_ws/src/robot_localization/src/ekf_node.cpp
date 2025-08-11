@@ -35,13 +35,21 @@
 #include "rclcpp/rclcpp.hpp"
 #include "robot_localization/ros_filter_types.hpp"
 
-int main(int argc, char ** argv)
-{
+int main(int argc, char **argv) {
   rclcpp::init(argc, argv);
   rclcpp::NodeOptions options;
   options.arguments({"ekf_filter_node"});
+  /*
+  std::shared_ptr
+  포인터, 스마트 포인터 둘다 힙 영역에 위치, 하지만 일반 포인터는 직접 delete 해줘야하지만 스마트 포인터는 자동으로 해제(RAII)
+  가비지 컬렉션이 없기때문, c++ 11이상부터는 스마트 포인터를 적극 권장
+  여기서 표준 라이브러리의 스마트 포인터가 3가지 있음
+  unique_ptr: 한명의 소유자만 허용
+  shared_ptr: 참조 횟수가 계산 되는 스마트 포인터, 원시 포인터 하나를 여러 소유자에게 할당할 경우 사용 => 참조수가 0이 되면 파괴
+  weak_ptr: shared_ptr과 같이 사용할 수 있는 포인터, 참조수 계산에 포함되지 않음, 순환 참조를 막기 이해서 주로 사용
+  */
   std::shared_ptr<robot_localization::RosEkf> filter =
-    std::make_shared<robot_localization::RosEkf>(options);
+      std::make_shared<robot_localization::RosEkf>(options);
   filter->initialize();
   rclcpp::spin(filter->get_node_base_interface());
   rclcpp::shutdown();

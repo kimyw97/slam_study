@@ -36,41 +36,38 @@
 #include <ostream>
 #include <vector>
 
-#include "angles/angles.h"
 #include "Eigen/Dense"
+#include "angles/angles.h"
 #include "rclcpp/time.hpp"
 #include "robot_localization/filter_common.hpp"
 #include "robot_localization/filter_utilities.hpp"
 #include "robot_localization/measurement.hpp"
 
-namespace robot_localization
-{
+namespace robot_localization {
 FilterBase::FilterBase()
-: initialized_(false), use_control_(false),
-  use_dynamic_process_noise_covariance_(false), control_timeout_(0, 0u),
-  last_measurement_time_(0, 0, RCL_ROS_TIME), latest_control_time_(0, 0, RCL_ROS_TIME),
-  sensor_timeout_(0, 0u), debug_stream_(nullptr),
-  acceleration_gains_(TWIST_SIZE, 0.0),
-  acceleration_limits_(TWIST_SIZE, 0.0),
-  deceleration_gains_(TWIST_SIZE, 0.0),
-  deceleration_limits_(TWIST_SIZE, 0.0),
-  control_update_vector_(TWIST_SIZE, 0), control_acceleration_(TWIST_SIZE),
-  latest_control_(TWIST_SIZE), predicted_state_(STATE_SIZE),
-  state_(STATE_SIZE), covariance_epsilon_(STATE_SIZE, STATE_SIZE),
-  dynamic_process_noise_covariance_(STATE_SIZE, STATE_SIZE),
-  estimate_error_covariance_(STATE_SIZE, STATE_SIZE),
-  identity_(STATE_SIZE, STATE_SIZE),
-  process_noise_covariance_(STATE_SIZE, STATE_SIZE),
-  transfer_function_(STATE_SIZE, STATE_SIZE),
-  transfer_function_jacobian_(STATE_SIZE, STATE_SIZE), debug_(false)
-{
+    : initialized_(false), use_control_(false),
+      use_dynamic_process_noise_covariance_(false), control_timeout_(0, 0u),
+      last_measurement_time_(0, 0, RCL_ROS_TIME),
+      latest_control_time_(0, 0, RCL_ROS_TIME), sensor_timeout_(0, 0u),
+      debug_stream_(nullptr), acceleration_gains_(TWIST_SIZE, 0.0),
+      acceleration_limits_(TWIST_SIZE, 0.0),
+      deceleration_gains_(TWIST_SIZE, 0.0),
+      deceleration_limits_(TWIST_SIZE, 0.0),
+      control_update_vector_(TWIST_SIZE, 0), control_acceleration_(TWIST_SIZE),
+      latest_control_(TWIST_SIZE), predicted_state_(STATE_SIZE),
+      state_(STATE_SIZE), covariance_epsilon_(STATE_SIZE, STATE_SIZE),
+      dynamic_process_noise_covariance_(STATE_SIZE, STATE_SIZE),
+      estimate_error_covariance_(STATE_SIZE, STATE_SIZE),
+      identity_(STATE_SIZE, STATE_SIZE),
+      process_noise_covariance_(STATE_SIZE, STATE_SIZE),
+      transfer_function_(STATE_SIZE, STATE_SIZE),
+      transfer_function_jacobian_(STATE_SIZE, STATE_SIZE), debug_(false) {
   reset();
 }
 
 FilterBase::~FilterBase() {}
 
-void FilterBase::reset()
-{
+void FilterBase::reset() {
   initialized_ = false;
 
   // Clear the state and predicted state
@@ -128,8 +125,7 @@ void FilterBase::reset()
 }
 
 void FilterBase::computeDynamicProcessNoiseCovariance(
-  const Eigen::VectorXd & state)
-{
+    const Eigen::VectorXd &state) {
   // A more principled approach would be to get the current velocity from the
   // state, make a diagonal matrix from it, and then rotate it to be in the
   // world frame (i.e., the same frame as the pose data). We could then use this
@@ -143,60 +139,51 @@ void FilterBase::computeDynamicProcessNoiseCovariance(
   Eigen::MatrixXd velocity_matrix(TWIST_SIZE, TWIST_SIZE);
   velocity_matrix.setIdentity();
   velocity_matrix.diagonal() *=
-    state.segment(POSITION_V_OFFSET, TWIST_SIZE).norm();
+      state.segment(POSITION_V_OFFSET, TWIST_SIZE).norm();
 
   dynamic_process_noise_covariance_.block<TWIST_SIZE, TWIST_SIZE>(
-    POSITION_OFFSET, POSITION_OFFSET) =
-    velocity_matrix *
-    process_noise_covariance_.block<TWIST_SIZE, TWIST_SIZE>(
-    POSITION_OFFSET,
-    POSITION_OFFSET) *
-    velocity_matrix.transpose();
+      POSITION_OFFSET, POSITION_OFFSET) =
+      velocity_matrix *
+      process_noise_covariance_.block<TWIST_SIZE, TWIST_SIZE>(POSITION_OFFSET,
+                                                              POSITION_OFFSET) *
+      velocity_matrix.transpose();
 }
 
-const Eigen::VectorXd & FilterBase::getControl() {return latest_control_;}
+const Eigen::VectorXd &FilterBase::getControl() { return latest_control_; }
 
-const rclcpp::Time & FilterBase::getControlTime()
-{
+const rclcpp::Time &FilterBase::getControlTime() {
   return latest_control_time_;
 }
 
-bool FilterBase::getDebug() {return debug_;}
+bool FilterBase::getDebug() { return debug_; }
 
-const Eigen::MatrixXd & FilterBase::getEstimateErrorCovariance()
-{
+const Eigen::MatrixXd &FilterBase::getEstimateErrorCovariance() {
   return estimate_error_covariance_;
 }
 
-bool FilterBase::getInitializedStatus() {return initialized_;}
+bool FilterBase::getInitializedStatus() { return initialized_; }
 
-const rclcpp::Time & FilterBase::getLastMeasurementTime()
-{
+const rclcpp::Time &FilterBase::getLastMeasurementTime() {
   return last_measurement_time_;
 }
 
-const Eigen::VectorXd & FilterBase::getPredictedState()
-{
+const Eigen::VectorXd &FilterBase::getPredictedState() {
   return predicted_state_;
 }
 
-const Eigen::MatrixXd & FilterBase::getProcessNoiseCovariance()
-{
+const Eigen::MatrixXd &FilterBase::getProcessNoiseCovariance() {
   return process_noise_covariance_;
 }
 
-const rclcpp::Duration & FilterBase::getSensorTimeout()
-{
+const rclcpp::Duration &FilterBase::getSensorTimeout() {
   return sensor_timeout_;
 }
 
-const Eigen::VectorXd & FilterBase::getState() {return state_;}
+const Eigen::VectorXd &FilterBase::getState() { return state_; }
 
-void FilterBase::processMeasurement(const Measurement & measurement)
-{
-  FB_DEBUG(
-    "------ FilterBase::processMeasurement (" << measurement.topic_name_ <<
-      ") ------\n");
+void FilterBase::processMeasurement(const Measurement &measurement) {
+  FB_DEBUG("------ FilterBase::processMeasurement (" << measurement.topic_name_
+                                                     << ") ------\n");
 
   rclcpp::Duration delta(0, 0u);
 
@@ -208,11 +195,11 @@ void FilterBase::processMeasurement(const Measurement & measurement)
     delta = measurement.time_ - last_measurement_time_;
 
     FB_DEBUG(
-      "Filter is already initialized. Carrying out predict/correct loop...\n"
-      "Measurement time is " <<
-        std::setprecision(20) << measurement.time_.nanoseconds() <<
-        ", last measurement time is " << last_measurement_time_.nanoseconds() <<
-        ", delta is " << delta.nanoseconds() << "\n");
+        "Filter is already initialized. Carrying out predict/correct loop...\n"
+        "Measurement time is "
+        << std::setprecision(20) << measurement.time_.nanoseconds()
+        << ", last measurement time is " << last_measurement_time_.nanoseconds()
+        << ", delta is " << delta.nanoseconds() << "\n");
 
     // Only want to carry out a prediction if it's
     // forward in time. Otherwise, just correct.
@@ -231,17 +218,17 @@ void FilterBase::processMeasurement(const Measurement & measurement)
     // Initialize the filter, but only with the values we're using
     size_t measurement_length = measurement.update_vector_.size();
     for (size_t i = 0; i < measurement_length; ++i) {
-      state_[i] = (measurement.update_vector_[i] ? measurement.measurement_[i] :
-        state_[i]);
+      state_[i] = (measurement.update_vector_[i] ? measurement.measurement_[i]
+                                                 : state_[i]);
     }
 
     // Same for covariance
     for (size_t i = 0; i < measurement_length; ++i) {
       for (size_t j = 0; j < measurement_length; ++j) {
         estimate_error_covariance_(i, j) =
-          (measurement.update_vector_[i] && measurement.update_vector_[j] ?
-          measurement.covariance_(i, j) :
-          estimate_error_covariance_(i, j));
+            (measurement.update_vector_[i] && measurement.update_vector_[j]
+                 ? measurement.covariance_(i, j)
+                 : estimate_error_covariance_(i, j));
       }
     }
 
@@ -259,27 +246,23 @@ void FilterBase::processMeasurement(const Measurement & measurement)
     last_measurement_time_ = measurement.time_;
   }
 
-  FB_DEBUG(
-    "------ /FilterBase::processMeasurement (" << measurement.topic_name_ <<
-      ") ------\n");
+  FB_DEBUG("------ /FilterBase::processMeasurement (" << measurement.topic_name_
+                                                      << ") ------\n");
 }
 
-void FilterBase::setControl(
-  const Eigen::VectorXd & control,
-  const rclcpp::Time & control_time)
-{
+void FilterBase::setControl(const Eigen::VectorXd &control,
+                            const rclcpp::Time &control_time) {
   latest_control_ = control;
   latest_control_time_ = control_time;
 }
 
 void FilterBase::setControlParams(
-  const std::vector<bool> & update_vector,
-  const rclcpp::Duration & control_timeout,
-  const std::vector<double> & acceleration_limits,
-  const std::vector<double> & acceleration_gains,
-  const std::vector<double> & deceleration_limits,
-  const std::vector<double> & deceleration_gains)
-{
+    const std::vector<bool> &update_vector,
+    const rclcpp::Duration &control_timeout,
+    const std::vector<double> &acceleration_limits,
+    const std::vector<double> &acceleration_gains,
+    const std::vector<double> &deceleration_limits,
+    const std::vector<double> &deceleration_gains) {
   use_control_ = true;
   control_update_vector_ = update_vector;
   control_timeout_ = control_timeout;
@@ -289,8 +272,7 @@ void FilterBase::setControlParams(
   deceleration_gains_ = deceleration_gains;
 }
 
-void FilterBase::setDebug(const bool debug, std::ostream * out_stream)
-{
+void FilterBase::setDebug(const bool debug, std::ostream *out_stream) {
   if (debug) {
     if (out_stream != NULL) {
       debug_stream_ = out_stream;
@@ -304,39 +286,33 @@ void FilterBase::setDebug(const bool debug, std::ostream * out_stream)
 }
 
 void FilterBase::setUseDynamicProcessNoiseCovariance(
-  const bool use_dynamic_process_noise_covariance)
-{
+    const bool use_dynamic_process_noise_covariance) {
   use_dynamic_process_noise_covariance_ = use_dynamic_process_noise_covariance;
 }
 
 void FilterBase::setEstimateErrorCovariance(
-  const Eigen::MatrixXd & estimate_error_covariance)
-{
+    const Eigen::MatrixXd &estimate_error_covariance) {
   estimate_error_covariance_ = estimate_error_covariance;
 }
 
 void FilterBase::setLastMeasurementTime(
-  const rclcpp::Time & last_measurement_time)
-{
+    const rclcpp::Time &last_measurement_time) {
   last_measurement_time_ = last_measurement_time;
 }
 
 void FilterBase::setProcessNoiseCovariance(
-  const Eigen::MatrixXd & process_noise_covariance)
-{
+    const Eigen::MatrixXd &process_noise_covariance) {
   process_noise_covariance_ = process_noise_covariance;
   dynamic_process_noise_covariance_ = process_noise_covariance_;
 }
 
-void FilterBase::setSensorTimeout(const rclcpp::Duration & sensor_timeout)
-{
+void FilterBase::setSensorTimeout(const rclcpp::Duration &sensor_timeout) {
   sensor_timeout_ = sensor_timeout;
 }
 
-void FilterBase::setState(const Eigen::VectorXd & state) {state_ = state;}
+void FilterBase::setState(const Eigen::VectorXd &state) { state_ = state; }
 
-void FilterBase::validateDelta(rclcpp::Duration & /*delta*/)
-{
+void FilterBase::validateDelta(rclcpp::Duration & /*delta*/) {
   // TODO(someone): Need to verify this condition B'Coz
   // rclcpp::Duration::from_seconds(100000.0) value is 0.00010000000000000000479
   // This handles issues with ROS time when use_sim_time is on and we're playing
@@ -350,101 +326,96 @@ void FilterBase::validateDelta(rclcpp::Duration & /*delta*/)
   } */
 }
 
-void FilterBase::prepareControl(
-  const rclcpp::Time & reference_time,
-  const rclcpp::Duration &)
-{
+void FilterBase::prepareControl(const rclcpp::Time &reference_time,
+                                const rclcpp::Duration &) {
   control_acceleration_.setZero();
-
+  // ros 인자로 받은 use_control이 true 일때만 작동
   if (use_control_) {
     bool timed_out =
-      (reference_time - latest_control_time_ >= control_timeout_);
+        // lastest_control_time도 cmd_Vel callback에서 넣어줌
+        (reference_time - latest_control_time_ >= control_timeout_);
 
     if (timed_out) {
-      FB_DEBUG(
-        "Control timed out. Reference time was " <<
-          reference_time.nanoseconds() << ", latest control time was " <<
-          latest_control_time_.nanoseconds() << ", control timeout was " <<
-          control_timeout_.nanoseconds() << "\n");
+      FB_DEBUG("Control timed out. Reference time was "
+               << reference_time.nanoseconds() << ", latest control time was "
+               << latest_control_time_.nanoseconds() << ", control timeout was "
+               << control_timeout_.nanoseconds() << "\n");
     }
 
     for (size_t controlInd = 0; controlInd < TWIST_SIZE; ++controlInd) {
       if (control_update_vector_[controlInd]) {
+        // control_acceleration은 크기 6인 벡터 -> 선가속도 xyz, 각가속도 xyz
         control_acceleration_(controlInd) = computeControlAcceleration(
-          state_(controlInd + POSITION_V_OFFSET),
-          (timed_out ? 0.0 : latest_control_(controlInd)),
-          acceleration_limits_[controlInd], acceleration_gains_[controlInd],
-          deceleration_limits_[controlInd], deceleration_gains_[controlInd]);
+            state_(controlInd + POSITION_V_OFFSET),
+            // latest_control은 cmd_vel을 구독해서 callback으로 넣어줌
+            (timed_out ? 0.0 : latest_control_(controlInd)),
+            acceleration_limits_[controlInd], acceleration_gains_[controlInd],
+            deceleration_limits_[controlInd], deceleration_gains_[controlInd]);
       }
     }
   }
 }
 
 inline double FilterBase::computeControlAcceleration(
-  const double state,
-  const double control,
-  const double acceleration_limit,
-  const double acceleration_gain,
-  const double deceleration_limit,
-  const double deceleration_gain)
-{
+    const double state, const double control, const double acceleration_limit,
+    const double acceleration_gain, const double deceleration_limit,
+    const double deceleration_gain) {
   FB_DEBUG("---------- FilterBase::computeControlAcceleration ----------\n");
 
-  const double error = control - state;
-  const bool same_sign = (::fabs(error) <= ::fabs(control) + 0.01);
-  const double set_point = (same_sign ? control : 0.0);
-  const bool decelerating = ::fabs(set_point) < ::fabs(state);
+  const double error = control - state; // 오차
+  const bool same_sign =
+      (::fabs(error) <= ::fabs(control) + 0.01);               // 같은 신호 인지
+  const double set_point = (same_sign ? control : 0.0);        // 시작점,
+  const bool decelerating = ::fabs(set_point) < ::fabs(state); // 감?
   double limit = acceleration_limit;
-  double gain = acceleration_gain;
+  double gain = acceleration_gain; // 보정 게인
 
   if (decelerating) {
     limit = deceleration_limit;
     gain = deceleration_gain;
   }
 
+  // 최종 가속도는 보정 게인의 곱으로 나오는데 제한 구간 내에서
   const double final_accel = std::min(std::max(gain * error, -limit), limit);
 
-  FB_DEBUG(
-    "Control value: " <<
-      control << "\n" <<
-      "State value: " << state << "\n" <<
-      "Error: " << error << "\n" <<
-      "Same sign: " << (same_sign ? "true" : "false") << "\n" <<
-      "Set point: " << set_point << "\n" <<
-      "Decelerating: " << (decelerating ? "true" : "false") << "\n" <<
-      "Limit: " << limit << "\n" <<
-      "Gain: " << gain << "\n" <<
-      "Final is " << final_accel << "\n");
+  FB_DEBUG("Control value: "
+           << control << "\n"
+           << "State value: " << state << "\n"
+           << "Error: " << error << "\n"
+           << "Same sign: " << (same_sign ? "true" : "false") << "\n"
+           << "Set point: " << set_point << "\n"
+           << "Decelerating: " << (decelerating ? "true" : "false") << "\n"
+           << "Limit: " << limit << "\n"
+           << "Gain: " << gain << "\n"
+           << "Final is " << final_accel << "\n");
 
   return final_accel;
 }
 
-void FilterBase::wrapStateAngles()
-{
+void FilterBase::wrapStateAngles() {
   state_(StateMemberRoll) = angles::normalize_angle(state_(StateMemberRoll));
   state_(StateMemberPitch) = angles::normalize_angle(state_(StateMemberPitch));
   state_(StateMemberYaw) = angles::normalize_angle(state_(StateMemberYaw));
 }
 
 bool FilterBase::checkMahalanobisThreshold(
-  const Eigen::VectorXd & innovation,
-  const Eigen::MatrixXd & innovation_covariance, const double n_sigmas)
-{
+    const Eigen::VectorXd &innovation,
+    const Eigen::MatrixXd &innovation_covariance, const double n_sigmas) {
   double squared_mahalanobis =
-    innovation.dot(innovation_covariance * innovation);
+      innovation.dot(innovation_covariance * innovation);
   double threshold = n_sigmas * n_sigmas;
 
   if (squared_mahalanobis >= threshold) {
     FB_DEBUG(
-      "Innovation mahalanobis distance test failed. Squared Mahalanobis is: " <<
-        squared_mahalanobis << "\nThreshold is: " << threshold << "\n" <<
-        "Innovation is: " << innovation << "\n" <<
-        "Innovation covariance is:\n" <<
-        innovation_covariance << "\n");
+        "Innovation mahalanobis distance test failed. Squared Mahalanobis is: "
+        << squared_mahalanobis << "\nThreshold is: " << threshold << "\n"
+        << "Innovation is: " << innovation << "\n"
+        << "Innovation covariance is:\n"
+        << innovation_covariance << "\n");
 
     return false;
   }
 
   return true;
 }
-}  // namespace robot_localization
+} // namespace robot_localization
